@@ -1,17 +1,18 @@
 {
   "dependencies": {
     "com.github.asus4.tflite": {
-      "version": "file:com.github.asus4.tflite",
+      "version": "2.12.0",
       "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.com"
     },
     "com.github.asus4.tflite.common": {
-      "version": "2.10.0-p1",
+      "version": "2.12.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.github.asus4.tflite": "2.10.0-p1"
+        "com.github.asus4.tflite": "2.12.0"
       },
       "url": "https://registry.npmjs.com"
     },
@@ -104,9 +105,9 @@
       "depth": 0,
       "source": "registry",
       "dependencies": {
+        "com.unity.modules.audio": "1.0.0",
         "com.unity.modules.director": "1.0.0",
         "com.unity.modules.animation": "1.0.0",
-        "com.unity.modules.audio": "1.0.0",
         "com.unity.modules.particlesystem": "1.0.0"
       },
       "url": "https://packages.unity.com"
