@@ -12,8 +12,10 @@ namespace Mediapipe.Unity
   public class Screen : MonoBehaviour
   {
     [SerializeField] private RawImage _screen;
+    [SerializeField] private Image _success;
 
     private ImageSource _imageSource;
+
 
     public Texture texture
     {
@@ -38,12 +40,15 @@ namespace Mediapipe.Unity
 
     public void Resize(int width, int height)
     {
+      Debug.Log("Resizing");
       _screen.rectTransform.sizeDelta = new Vector2(width, height);
+      _success.rectTransform.sizeDelta = new Vector2(width, height);
     }
 
     public void Rotate(RotationAngle rotationAngle)
     {
       _screen.rectTransform.localEulerAngles = rotationAngle.GetEulerAngles();
+      _success.rectTransform.localEulerAngles = rotationAngle.GetEulerAngles();
     }
 
     public void ReadSync(TextureFrame textureFrame)

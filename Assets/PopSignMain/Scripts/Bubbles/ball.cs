@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 using System.Collections;
 using System.Diagnostics;
 
@@ -18,6 +19,8 @@ public class ball : MonoBehaviour
     Vector3 dropTarget;
     public bool newBall;
     bool stoppedBall;
+    private Animator signCaptured;
+    private Image signColor;
     private bool destroyed;
     public bool NotSorting;
     ArrayList fireballArray = new ArrayList();
@@ -74,6 +77,8 @@ public class ball : MonoBehaviour
         leftBorder = Camera.main.GetComponent<mainscript>().leftBorder;
         rightBorder = Camera.main.GetComponent<mainscript>().rightBorder;
         isPaused = Camera.main.GetComponent<mainscript>().isPaused;
+        signCaptured = GameObject.Find("SignCaptured").GetComponent<Animator>();
+        signColor = GameObject.Find("SignCaptured").GetComponent<Image>();
 
         //POPSign using the gray bubble instead of colorful bubbles.
         GetComponent<SpriteRenderer>().sprite = gameObject.GetComponent<ColorBallScript>().sprites[6];
@@ -116,7 +121,7 @@ public class ball : MonoBehaviour
         // If user left clicks screen
         if (Input.GetMouseButtonUp(0))
         {
-
+            UnityEngine.Debug.Log("LiftingFromBallScript");
             GameObject ball = gameObject;
             //If the click has been released and the ball hasn't been launched yet
 
@@ -134,55 +139,12 @@ public class ball : MonoBehaviour
                     GamePlay.Instance.GameStatus == GameState.WaitForStar))
             {
                 //Get the position of the click
-                Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                worldPos = pos;
+                worldPos = GameObject.Find("Line").GetComponent<DrawLine>().dir;
                 //If the y position of the click is within 4 units of the bottom of the original lowest row of balls and you have control over the ball
-                if (worldPos.y > -4f && worldPos.y < 4f && !mainscript.StopControl)
+                if (!mainscript.StopControl)
                 {
-                    //Get local response result
-                    string result = TfLiteManager.Instance.StopRecording();
-
-                    //We Rewrite the color
-                    var newColor = this.sharedVideoManager.getBallColorFromVideoName(result);
-                    ball.GetComponent<ColorBallScript>().SetColor(newColor);
-
-                    //Once ball is launched, set color of ball to the color of its word.
-                    int orginalColor = (int)ball.GetComponent<ColorBallScript>().mainColor;
-                    GetComponent<SpriteRenderer>().sprite = gameObject.GetComponent<ColorBallScript>().sprites[orginalColor - 1];
-
-                    //160-170 puts image of word on the launched ball
-                    GameObject imageObject = new GameObject();
-                    imageObject.transform.parent = ball.transform;
-
-                    SpriteRenderer ballImage = imageObject.AddComponent<SpriteRenderer>();
-                    // Consider the image size
-                    ballImage.transform.localScale = new Vector3(0.2f, 0.2f, 0.0f);
-                    ballImage.transform.localPosition = new Vector3(0f, 0f, 5.0f);
-                    string imageName = this.sharedVideoManager.getVideoByColor(ball.GetComponent<ColorBallScript>().mainColor).imageName;
-                    ballImage.sprite = (Sprite)Resources.Load(imageName, typeof(Sprite));
-                    ballImage.sortingLayerName = "WordIconsLayer";
-                    ballImage.sortingOrder = 2;
-
-                    // If the ball is a fireball, disable collision.
-                    if (!fireBall)
-                    {
-                        GetComponent<CircleCollider2D>().enabled = false;
-                    }
-
-                    // Launch the ball! Make the ball movement sound
-                    target = worldPos;
-                    setTarget = true;
-                    startTime = Time.time;
-                    dropTarget = transform.position;
-                    mainscript.Instance.newBall = gameObject;
-                    mainscript.Instance.newBall2 = gameObject;
-                    GetComponent<Rigidbody2D>().AddForce(target - dropTarget, ForceMode2D.Force);
-                    launched = true;
-                    SoundBase.Instance.GetComponent<AudioSource>().PlayOneShot(SoundBase.Instance.swish[0]);
-
-                    // Disappear the tutorial instructions
-                    Camera.main.GetComponent<TutorialManager>().BallHit();
-
+                    if(GameObject.Find("Sign/Shoot").GetComponent<HoldToSign>().isShot)
+                        StopRecordingAndShoot();
                 }
             }
         }
@@ -241,6 +203,61 @@ public class ball : MonoBehaviour
     //        return false;
     //}
 
+    public void StopRecordingAndShoot()
+    {
+        GameObject ball = gameObject;
+        //Get local response result
+        string result = TfLiteManager.Instance.StopRecording();
+
+        signColor.color = new Color32(100, 255, 117, 255);
+        signCaptured.SetTrigger("Pulse");
+
+
+        //We Rewrite the color
+        var newColor = this.sharedVideoManager.getBallColorFromVideoName(result);
+        ball.GetComponent<ColorBallScript>().SetColor(newColor);
+
+        //Once ball is launched, set color of ball to the color of its word.
+        int orginalColor = (int)ball.GetComponent<ColorBallScript>().mainColor;
+        GetComponent<SpriteRenderer>().sprite = gameObject.GetComponent<ColorBallScript>().sprites[orginalColor - 1];
+
+        //160-170 puts image of word on the launched ball
+        GameObject imageObject = new GameObject();
+        imageObject.transform.parent = ball.transform;
+
+        SpriteRenderer ballImage = imageObject.AddComponent<SpriteRenderer>();
+        // Consider the image size
+        ballImage.transform.localScale = new Vector3(0.2f, 0.2f, 0.0f);
+        ballImage.transform.localPosition = new Vector3(0f, 0f, 5.0f);
+        string imageName = this.sharedVideoManager.getVideoByColor(ball.GetComponent<ColorBallScript>().mainColor).imageName;
+        ballImage.sprite = (Sprite)Resources.Load(imageName, typeof(Sprite));
+        ballImage.sortingLayerName = "WordIconsLayer";
+        ballImage.sortingOrder = 2;
+
+        // If the ball is a fireball, disable collision.
+        if (!fireBall)
+        {
+            GetComponent<CircleCollider2D>().enabled = false;
+        }
+
+        // Launch the ball! Make the ball movement sound
+        target = worldPos;
+        setTarget = true;
+        startTime = Time.time;
+        dropTarget = transform.position;
+        mainscript.Instance.newBall = gameObject;
+        mainscript.Instance.newBall2 = gameObject;
+        GetComponent<Rigidbody2D>().AddForce(target - dropTarget, ForceMode2D.Force);
+        launched = true;
+        SoundBase.Instance.GetComponent<AudioSource>().PlayOneShot(SoundBase.Instance.swish[0]);
+
+        // Disappear the tutorial instructions
+        Camera.main.GetComponent<TutorialManager>().BallHit();
+
+        TfLiteManager.Instance.StartRecording();
+        TfLiteManager.Instance.StopRecording();
+                
+    }
 
     void FixedUpdate()
     {

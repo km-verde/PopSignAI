@@ -10,14 +10,14 @@ using System.IO;
 
 public class HandsMediaPipe : MonoBehaviour
 {
+    public bool handInFrame = false;
+    public GameObject shootButton;
     [SerializeField] private TextAsset _configAssetCPU;
     [SerializeField] private TextAsset _configAssetGPU;
     [SerializeField] private RawImage _screen;
     [SerializeField] private int _targetHeight;
     [SerializeField] private int _fps;
     [SerializeField] private MultiHandLandmarkListAnnotationController _multiHandLandmarksAnnotationController;
-
-
     [SerializeField] private bool enableCoordinateDebugging;
     [SerializeField] private Text coordinateDebugger;
 
@@ -104,13 +104,17 @@ public class HandsMediaPipe : MonoBehaviour
         }
         
         float flipdegree = _webCamTexture.videoVerticallyMirrored ? 0f : 180f;
+        GameObject signCaptured = GameObject.Find("SignCaptured");
 
         _screen.rectTransform.localEulerAngles = new Vector3(0, flipdegree, 360 - _webCamTexture.videoRotationAngle);
 
         var heightofScreen = (_screen.rectTransform.rect.width/_width) * _height;
         //Debug.LogWarning("heightofScreen " + heightofScreen);
         var parentrect = _screen.rectTransform.parent.GetComponent<RectTransform>();
+        var capturedRect = signCaptured.GetComponent<RectTransform>();
         parentrect.sizeDelta = new Vector2(_screen.rectTransform.rect.width, heightofScreen);
+        capturedRect.sizeDelta =  new Vector2(_screen.rectTransform.rect.width, heightofScreen);
+        capturedRect.localEulerAngles = new Vector3(0, flipdegree, 360 - _webCamTexture.videoRotationAngle);
         //Debug.LogWarning(_screen.rectTransform.rect.width + ", " + _screen.rectTransform.rect.height);
         //coordinateDebugger.text = _webCamTexture.videoVerticallyMirrored + ", " + _webCamTexture.videoRotationAngle;
 
@@ -166,6 +170,16 @@ public class HandsMediaPipe : MonoBehaviour
 
             if (handLandmarksStream.TryGetNext(out var handLandmarks))
             {
+                if(!Input.GetMouseButton(0))
+                {
+                    if(shootButton.GetComponent<HoldToSign>().isShot)
+                    {
+                        TfLiteManager.Instance.StartRecording();
+                        Debug.Log("Recording Started");
+                    }
+                    handInFrame = true;
+                    shootButton.GetComponent<HoldToSign>().isShot = false;
+                }
                 if (TfLiteManager.Instance.IsRecording() && !GamePlay.Instance.InGamePauseTriggered)
                 {
                     if (handLandmarks != null && handLandmarks.Count > 0)
@@ -213,6 +227,7 @@ public class HandsMediaPipe : MonoBehaviour
             else
             {
                 _multiHandLandmarksAnnotationController.DrawNow(null);
+                handInFrame = false;
             }
         }
     }

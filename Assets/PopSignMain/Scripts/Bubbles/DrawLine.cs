@@ -4,6 +4,7 @@ using System.Collections;
 public class DrawLine : MonoBehaviour
 {
     public static Vector2[] waypoints = new Vector2[3];
+    public Vector3 dir = new Vector3(0,0,0);
     public float addAngle = 90;
     public GameObject pointer;
     public GameObject topBorder;
@@ -17,6 +18,8 @@ public class DrawLine : MonoBehaviour
     GameObject[] pointers2 = new GameObject[3];
     Vector3 lastMousePos;
     private bool startAnim;
+    public bool startRecording = false;
+    
 
     // Use this for initialization
     void Start()
@@ -113,38 +116,22 @@ public class DrawLine : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButton(0) && Camera.main.ScreenToWorldPoint(Input.mousePosition).y > -4.1f)
         {
-            if (GamePlay.Instance.GameStatus != GameState.BlockedGame)
+            dir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Vector3.back * 10;
+            if(!startRecording)
             {
-                if(topBorder.transform.position.y > Camera.main.ScreenToWorldPoint(Input.mousePosition).y)
-                {
-                    draw = true;
-
-                    //Start Recording Data!
-                    TfLiteManager.Instance.StartRecording();
-                }
+                TfLiteManager.Instance.StartRecording();
+                UnityEngine.Debug.Log("Recording from line");
+                startRecording = true;
             }
-            else
-            {
-                draw = false;
-            }
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            draw = false;
-        }
 
-        if (draw)
-        {
-            Vector3 dir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Vector3.back * 10;
             if( !mainscript.StopControl )
             {
-
                 dir.z = 0;
                 if (lastMousePos == dir)
                 {
-					          //POPSign set startAnim to false. statAnim set to true will animate the line
+                                //POPSign set startAnim to false. statAnim set to true will animate the line
                     startAnim = false;
                 }
                 else startAnim = false;
@@ -160,58 +147,54 @@ public class DrawLine : MonoBehaviour
                     line.SetPosition(1, point);
                     addAngle = 180;
 
-                       if (waypoints[1].x < 0) addAngle = 0;
-                       if( item.collider.gameObject.layer == LayerMask.NameToLayer( "Border" ) && item.collider.gameObject.name != "GameOverBorder" && item.collider.gameObject.name != "borderForRoundedLevels" )
-                        {
-                           Debug.DrawLine( waypoints[0], waypoints[1], Color.red );  //waypoints[0] + ( (Vector2)dir - waypoints[0] ).normalized * 10
-                           Debug.DrawLine( waypoints[0], dir, Color.blue );
-                           Debug.DrawRay( waypoints[0], waypoints[1] - waypoints[0], Color.green );
-                           waypoints[1] = point;
-                           waypoints[2] = point;
-                           line.SetPosition( 1, dir );
-                            waypoints[1] = point;
-                            float angle = 0;
-                            angle = Vector2.Angle(waypoints[0] - waypoints[1], (point - Vector2.up * 100) - (Vector2)point);
-                            if (waypoints[1].x > 0) angle = Vector2.Angle(waypoints[0] - waypoints[1], (Vector2)point - (point - Vector2.up * 100));
-                            waypoints[2] = Quaternion.AngleAxis(angle + addAngle, Vector3.back) * ((Vector2)point - (point - Vector2.up * 100));
-                            Vector2 AB = waypoints[2] - waypoints[1];
-                            AB = AB.normalized;
-                            line.SetPosition(2, waypoints[2]);
-                            break;
-                        }
-                        else if (item.collider.gameObject.layer == LayerMask.NameToLayer("Ball"))
-                        {
-                            Debug.DrawLine( waypoints[0], waypoints[1], Color.red );  //waypoints[0] + ( (Vector2)dir - waypoints[0] ).normalized * 10
-                            Debug.DrawLine( waypoints[0], dir, Color.blue );
-                            Debug.DrawRay( waypoints[0], waypoints[1] - waypoints[0], Color.green );
-                            line.SetPosition( 1, point );
-                            waypoints[1] = point;
-                            waypoints[2] = point;
-                            Vector2 AB = waypoints[2] - waypoints[1];
-                            AB = AB.normalized;
-                            line.SetPosition(2, waypoints[1] + (0.1f * AB));
-                            break;
-                        }
-                        else
-                        {
+                    if (waypoints[1].x < 0) 
+                    addAngle = 0;
+                    if( item.collider.gameObject.layer == LayerMask.NameToLayer( "Border" ) && item.collider.gameObject.name != "GameOverBorder" && item.collider.gameObject.name != "borderForRoundedLevels" )
+                    {
+                    //    Debug.DrawLine( waypoints[0], waypoints[1], Color.red );  //waypoints[0] + ( (Vector2)dir - waypoints[0] ).normalized * 10
+                    //    Debug.DrawLine( waypoints[0], dir, Color.blue );
+                    //    Debug.DrawRay( waypoints[0], waypoints[1] - waypoints[0], Color.green );
+                        waypoints[1] = point;
+                        waypoints[2] = point;
+                        line.SetPosition( 1, dir );
+                        waypoints[1] = point;
+                        float angle = 0;
+                        angle = Vector2.Angle(waypoints[0] - waypoints[1], (point - Vector2.up * 100) - (Vector2)point);
+                        if (waypoints[1].x > 0) angle = Vector2.Angle(waypoints[0] - waypoints[1], (Vector2)point - (point - Vector2.up * 100));
+                        waypoints[2] = Quaternion.AngleAxis(angle + addAngle, Vector3.back) * ((Vector2)point - (point - Vector2.up * 100));
+                        Vector2 AB = waypoints[2] - waypoints[1];
+                        AB = AB.normalized;
+                        line.SetPosition(2, waypoints[2]);
+                        break;
+                    }
+                    else if (item.collider.gameObject.layer == LayerMask.NameToLayer("Ball"))
+                    {
+                        // Debug.DrawLine( waypoints[0], waypoints[1], Color.red );  //waypoints[0] + ( (Vector2)dir - waypoints[0] ).normalized * 10
+                        // Debug.DrawLine( waypoints[0], dir, Color.blue );
+                        // Debug.DrawRay( waypoints[0], waypoints[1] - waypoints[0], Color.green );
+                        line.SetPosition( 1, point );
+                        waypoints[1] = point;
+                        waypoints[2] = point;
+                        Vector2 AB = waypoints[2] - waypoints[1];
+                        AB = AB.normalized;
+                        line.SetPosition(2, waypoints[1] + (0.1f * AB));
+                        break;
+                    }
+                    else
+                    {
 
-                            waypoints[1] = waypoints[0] + ( (Vector2)dir - waypoints[0] ).normalized * 10;
-                            waypoints[2] = waypoints[0] + ( (Vector2)dir - waypoints[0] ).normalized * 10;
-                        }
-
-
-
+                        waypoints[1] = waypoints[0] + ( (Vector2)dir - waypoints[0] ).normalized * 10;
+                        waypoints[2] = waypoints[0] + ( (Vector2)dir - waypoints[0] ).normalized * 10;
+                    }
                 }
                 if (!startAnim )
                     GeneratePositionsPoints();
 
             }
-
         }
-        else if (!draw)
+        else
         {
-            HidePoints();
+            startRecording = false;
         }
-
     }
 }

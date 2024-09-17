@@ -15,10 +15,10 @@ public class LinePoint : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        if (startPoint == nextPoint) GetComponent<SpriteRenderer>().enabled = false;
+        //if (startPoint == nextPoint) GetComponent<SpriteRenderer>().enabled = false;
 
-        timeLerped += Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, nextPoint, speed * Time.deltaTime);
+        // timeLerped += Time.deltaTime;
+        // transform.position = Vector3.MoveTowards(transform.position, nextPoint, speed * Time.deltaTime);
         if ((Vector2)transform.position == nextPoint)
         {
                 nextWayPoint = 0;
