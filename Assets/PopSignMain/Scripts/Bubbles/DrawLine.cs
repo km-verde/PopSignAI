@@ -19,6 +19,7 @@ public class DrawLine : MonoBehaviour
     Vector3 lastMousePos;
     private bool startAnim;
     public bool startRecording = false;
+    public bool arrowDown = false;
     
 
     // Use this for initialization
@@ -116,10 +117,14 @@ public class DrawLine : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButton(0) && Camera.main.ScreenToWorldPoint(Input.mousePosition).y > -4.1f)
+        if(Input.GetMouseButton(0) && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > -4.1f || arrowDown))
         {
-            dir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Vector3.back * 10;
-            if(!startRecording)
+
+            if(!arrowDown)
+                dir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Vector3.back * 10;
+
+            UnityEngine.Debug.Log(dir);
+            if(!startRecording && Camera.main.ScreenToWorldPoint(Input.mousePosition).y > -4.1f)
             {
                 TfLiteManager.Instance.StartRecording();
                 UnityEngine.Debug.Log("Recording from line");

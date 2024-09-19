@@ -252,11 +252,11 @@ public class ball : MonoBehaviour
         SoundBase.Instance.GetComponent<AudioSource>().PlayOneShot(SoundBase.Instance.swish[0]);
 
         // Disappear the tutorial instructions
-        Camera.main.GetComponent<TutorialManager>().BallHit();
+        Camera.main.GetComponent<TutorialManager>().BallHit();                
+        GameObject.Find("MediaPipeHands").GetComponent<HandsMediaPipe>().lockOutTimeLeft = GameObject.Find("MediaPipeHands").GetComponent<HandsMediaPipe>().lockOutTime;
 
         TfLiteManager.Instance.StartRecording();
-        TfLiteManager.Instance.StopRecording();
-                
+        TfLiteManager.Instance.StopRecording();                
     }
 
     void FixedUpdate()

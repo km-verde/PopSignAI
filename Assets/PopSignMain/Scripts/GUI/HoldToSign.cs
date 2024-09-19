@@ -27,7 +27,12 @@ using System.Collections;
         
         void Update()
         {
-            if(hands.GetComponent<HandsMediaPipe>().handInFrame || !isShot)
+            if(isShot && !Input.GetMouseButton(0))
+            {
+               hands.GetComponent<HandsMediaPipe>().lockOutTimeLeft -= Time.deltaTime; 
+            }
+            if((hands.GetComponent<HandsMediaPipe>().handInFrame || !isShot)
+                && hands.GetComponent<HandsMediaPipe>().lockOutTimeLeft <= 0)
             {
                 label.SetText("Shoot");
             }

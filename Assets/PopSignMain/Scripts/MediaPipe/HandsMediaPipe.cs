@@ -12,6 +12,9 @@ public class HandsMediaPipe : MonoBehaviour
 {
     public bool handInFrame = false;
     public GameObject shootButton;
+    public float lockOutTimeLeft = 0f;
+    public float lockOutTime = 5f;
+    
     [SerializeField] private TextAsset _configAssetCPU;
     [SerializeField] private TextAsset _configAssetGPU;
     [SerializeField] private RawImage _screen;
@@ -172,13 +175,21 @@ public class HandsMediaPipe : MonoBehaviour
             {
                 if(!Input.GetMouseButton(0))
                 {
-                    if(shootButton.GetComponent<HoldToSign>().isShot)
+                    if(shootButton.GetComponent<HoldToSign>().isShot && lockOutTimeLeft <= 0f)
                     {
                         TfLiteManager.Instance.StartRecording();
                         Debug.Log("Recording Started");
                     }
-                    handInFrame = true;
-                    shootButton.GetComponent<HoldToSign>().isShot = false;
+                    if(shootButton.GetComponent<HoldToSign>().isShot)
+                    {
+                        if(lockOutTimeLeft <= 0f)
+                        {
+                            handInFrame = true;
+                            shootButton.GetComponent<HoldToSign>().isShot = false;
+                        }
+
+                    }
+                   
                 }
                 if (TfLiteManager.Instance.IsRecording() && !GamePlay.Instance.InGamePauseTriggered)
                 {

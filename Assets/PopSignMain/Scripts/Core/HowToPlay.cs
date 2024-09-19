@@ -12,6 +12,7 @@ public class HowToPlay : MonoBehaviour
     public GameObject page4;
     public GameObject page5;
     public GameObject page6;
+    public GameObject page7;
 
     int currentPage;
 
@@ -50,10 +51,15 @@ public class HowToPlay : MonoBehaviour
                 currentPage += 1;
                 break;
             case 6:
+                page6.SetActive(false);
+                page7.SetActive(true);
+                currentPage += 1;
+                break;
+            case 7:
                 if (isInGame)
                 {
                     currentPage = 1;
-                    page6.SetActive(false);
+                    page7.SetActive(false);
                     page1.SetActive(true);
                     ReplaceNextTexture();
                     this.GetComponent<AnimationManager>().CloseMenu();
@@ -72,7 +78,7 @@ public class HowToPlay : MonoBehaviour
     private void ReplaceNextTexture()
     {
         RawImage curtCircle = (RawImage)GameObject.Find("Circle" + currentPage).GetComponent<RawImage>();
-        RawImage prevCircle = (RawImage)GameObject.Find("Circle" + (currentPage == 1 ? 6 : currentPage - 1)).GetComponent<RawImage>();
+        RawImage prevCircle = (RawImage)GameObject.Find("Circle" + (currentPage == 1 ? 7 : currentPage - 1)).GetComponent<RawImage>();
 
         Texture unfilledTexture = prevCircle.texture;
         Texture filledTexture = curtCircle.texture;
@@ -118,6 +124,11 @@ public class HowToPlay : MonoBehaviour
             case 6:
                 page6.SetActive(false);
                 page5.SetActive(true);
+                currentPage -= 1;
+                break;
+            case 7:
+                page7.SetActive(false);
+                page6.SetActive(true);
                 currentPage -= 1;
                 break;
             default:
