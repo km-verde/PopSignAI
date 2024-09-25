@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using InitScriptName;
+using TMPro;
 
 
 [RequireComponent(typeof(AudioSource))]
@@ -105,6 +106,8 @@ public class mainscript : MonoBehaviour
 
     private int _ComboCount;
 
+    private VideoManager sharedVideoManager;
+
     //this variable is set in response to the whiff variable in ball; it's true when the flying ball didn't hit at least 2 balls of its color
     public bool BallWhiffed;
     public int ComboCount
@@ -159,6 +162,41 @@ public class mainscript : MonoBehaviour
         animTable.Clear();
         creatorBall = GameObject.Find("Creator").GetComponent<creatorBall>();
         StartCoroutine(CheckColors());
+
+    // names of ball lables
+    List<string> bubbleTypes = new List<string>
+        {"Blue", "Green", "Pink", "Purple", "Yellow"};
+
+    this.sharedVideoManager = VideoManager.getVideoManager();
+    foreach (string bub in bubbleTypes) 
+        {
+            GameObject b = GameObject.Find(bub);
+
+            // Create a new GameObject to hold the text
+            GameObject textObject = new GameObject("TextObject");
+            textObject.transform.parent = b.transform;
+
+            // Add a TextMeshPro component
+            TextMeshPro textMeshPro = textObject.AddComponent<TextMeshPro>();
+
+            // Set the text value
+            string textContent = this.sharedVideoManager.getVideoByColor(b.GetComponent<ColorBallScript> ().mainColor).imageName; // Replace with text from game level
+            textContent = textContent.Substring(10);
+            textMeshPro.text = textContent;
+
+            // Customize the text appearance
+            textMeshPro.fontSize = 3;
+            textMeshPro.color = Color.white; // Set the text color
+            textMeshPro.alignment = TextAlignmentOptions.Center;
+            MeshRenderer meshRenderer = textMeshPro.GetComponent<MeshRenderer>();
+            meshRenderer.sortingLayerName = "VideoLayer";
+            meshRenderer.sortingOrder = 5;
+
+            // Position the text object as needed
+            textObject.transform.localPosition = Vector3.zero;
+
+        }
+
     }
 
     IEnumerator CheckColors()
