@@ -444,17 +444,18 @@ public class creatorBall : MonoBehaviour
                 TextMeshPro textMeshPro = textObject.AddComponent<TextMeshPro>();
                 string textContent = sharedVideoManager.getVideoByColor(b.GetComponent<ColorBallScript>().mainColor).imageName;
                 textContent = textContent.Substring(10);
-
-                // if word length is longer than 6 chars, modify to fit on ball
-                if (textContent.Length > 6)
-                {
-                    textContent = textContent.Substring(0, 3) + "...";  // Cut off to 6 characters and add ellipsis
-                }
                 textMeshPro.text = textContent;
 
                 // modify text to fit in center of ball
-                textMeshPro.fontSize = 2f;
+                if (textContent.Length > 6) { // if word length is longer than 6 chars, modify to fit on ball
+                    textMeshPro.fontSize = 1.3f;
+                } else {
+                    textMeshPro.fontSize = 1.7f;
+                }
                 textObject.transform.localScale = new Vector3(1f, 1f, 1f);
+                if (textContent.Length > 8) {
+                    textObject.transform.localScale = new Vector3(0.8f, 0.8f, 1f);
+                }
                 textMeshPro.color = Color.white;
                 textMeshPro.alignment = TextAlignmentOptions.Center;
                 textObject.transform.localPosition = Vector3.zero;
