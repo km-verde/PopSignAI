@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using TMPro;
 
 public class creatorBall : MonoBehaviour
 {
@@ -415,20 +416,53 @@ public class creatorBall : MonoBehaviour
             b.GetComponent<BoxCollider2D>().offset = Vector2.zero;
             b.GetComponent<BoxCollider2D>().size = new Vector2(0.5f, 0.5f);
 
-            //POPSign add image to the bubbles
-            GameObject imageObject = new GameObject();
-            imageObject.transform.parent = b.transform;
-            SpriteRenderer ballImage = imageObject.AddComponent<SpriteRenderer>();
-            if (b.GetComponent<ColorBallScript>().mainColor != BallColor.star)
-            {
-                string imageName = sharedVideoManager.getVideoByColor(b.GetComponent<ColorBallScript>().mainColor).imageName;
-                ballImage.sprite = (Sprite)Resources.Load(imageName, typeof(Sprite));
-                ballImage.sortingLayerName = "WordIconsLayer";
-                ballImage.sortingOrder = 2;
+            // //POPSign add image to the bubbles
+            // GameObject imageObject = new GameObject();
+            // imageObject.transform.parent = b.transform;
+            // SpriteRenderer ballImage = imageObject.AddComponent<SpriteRenderer>();
+            // if (b.GetComponent<ColorBallScript>().mainColor != BallColor.star)
+            // {
+            //     string imageName = sharedVideoManager.getVideoByColor(b.GetComponent<ColorBallScript>().mainColor).imageName;
+            //     ballImage.sprite = (Sprite)Resources.Load(imageName, typeof(Sprite));
+            //     ballImage.sortingLayerName = "WordIconsLayer";
+            //     ballImage.sortingOrder = 2;
 
-                // Consider the image size
-                ballImage.transform.localScale = new Vector3(0.2f, 0.2f, 0.0f);
-                ballImage.transform.localPosition = new Vector3(0f, 0f, 5.0f);
+            //     // Consider the image size
+            //     ballImage.transform.localScale = new Vector3(0.2f, 0.2f, 0.0f);
+            //     ballImage.transform.localPosition = new Vector3(0f, 0f, 5.0f);
+            // }
+
+            // Add text to present bubbles (not one being launched)
+            if (b.GetComponent<ColorBallScript>().mainColor != BallColor.star) // Check if the ball's color is not star
+            {
+                // make text object to put on ball
+                GameObject textObject = new GameObject("TextObject");
+                textObject.transform.parent = b.transform;
+                textObject.layer = b.layer;
+
+                // get text content from sharedVideoManager
+                TextMeshPro textMeshPro = textObject.AddComponent<TextMeshPro>();
+                string textContent = sharedVideoManager.getVideoByColor(b.GetComponent<ColorBallScript>().mainColor).imageName;
+                textContent = textContent.Substring(10);
+
+                // if word length is longer than 6 chars, modify to fit on ball
+                if (textContent.Length > 6)
+                {
+                    textContent = textContent.Substring(0, 3) + "...";  // Cut off to 6 characters and add ellipsis
+                }
+                textMeshPro.text = textContent;
+
+                // modify text to fit in center of ball
+                textMeshPro.fontSize = 2f;
+                textObject.transform.localScale = new Vector3(1f, 1f, 1f);
+                textMeshPro.color = Color.white;
+                textMeshPro.alignment = TextAlignmentOptions.Center;
+                textObject.transform.localPosition = Vector3.zero;
+
+                // makes sure the text is over ball sprite
+                MeshRenderer textMeshRenderer = textMeshPro.GetComponent<MeshRenderer>();
+                textMeshRenderer.sortingLayerName = "WordIconsLayer";
+                textMeshRenderer.sortingOrder = 10;
             }
 
         }

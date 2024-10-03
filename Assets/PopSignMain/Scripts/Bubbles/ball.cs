@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using System.Diagnostics;
+using TMPro;
 
 public class ball : MonoBehaviour
 {
@@ -147,21 +148,52 @@ public class ball : MonoBehaviour
                     ball.GetComponent<ColorBallScript>().SetColor(newColor);
 
                     //Once ball is launched, set color of ball to the color of its word.
-                    int orginalColor = (int)ball.GetComponent<ColorBallScript>().mainColor;
+                    ColorBallScript ballScript = ball.GetComponent<ColorBallScript>();
+                    int orginalColor = (int) ballScript.mainColor;
                     GetComponent<SpriteRenderer>().sprite = gameObject.GetComponent<ColorBallScript>().sprites[orginalColor - 1];
 
                     //160-170 puts image of word on the launched ball
-                    GameObject imageObject = new GameObject();
-                    imageObject.transform.parent = ball.transform;
+                    //GameObject imageObject = new GameObject();
+                    //imageObject.transform.parent = ball.transform;
 
-                    SpriteRenderer ballImage = imageObject.AddComponent<SpriteRenderer>();
+                    //SpriteRenderer ballImage = imageObject.AddComponent<SpriteRenderer>();
                     // Consider the image size
-                    ballImage.transform.localScale = new Vector3(0.2f, 0.2f, 0.0f);
-                    ballImage.transform.localPosition = new Vector3(0f, 0f, 5.0f);
-                    string imageName = this.sharedVideoManager.getVideoByColor(ball.GetComponent<ColorBallScript>().mainColor).imageName;
-                    ballImage.sprite = (Sprite)Resources.Load(imageName, typeof(Sprite));
-                    ballImage.sortingLayerName = "WordIconsLayer";
-                    ballImage.sortingOrder = 2;
+                    //ballImage.transform.localScale = new Vector3(0.2f, 0.2f, 0.0f);
+                    //ballImage.transform.localPosition = new Vector3(0f, 0f, 5.0f);
+                    //string imageName = this.sharedVideoManager.getVideoByColor(ball.GetComponent<ColorBallScript>().mainColor).imageName;
+                    //ballImage.sprite = (Sprite)Resources.Load(imageName, typeof(Sprite));
+                    //ballImage.sortingLayerName = "WordIconsLayer";
+                   // ballImage.sortingOrder = 2;
+
+                    // make text object to put on ball
+                    GameObject textObject = new GameObject("TextObject");
+                    textObject.SetActive(true);
+                    textObject.transform.parent = ball.transform;
+                    textObject.layer = ball.layer;
+
+                    // get text content from sharedVideoManager
+                    TextMeshPro textMeshPro = textObject.AddComponent<TextMeshPro>();
+                    string textContent = this.sharedVideoManager.getVideoByColor(ballScript.mainColor).imageName;
+                    textContent = textContent.Substring(10);
+
+                    // if word length is longer than 6 chars, modify to fit on ball
+                    if (textContent.Length > 6)
+                    {
+                        textContent = textContent.Substring(0, 3) + "...";  // Cut off to 6 characters and add ellipsis
+                    }
+                    textMeshPro.text = textContent;
+
+                    // modify text to fit in center of ball
+                    textMeshPro.fontSize = 2f;
+                    textObject.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
+                    textMeshPro.color = Color.white;
+                    textMeshPro.alignment = TextAlignmentOptions.Center;
+                    textObject.transform.localPosition = Vector3.zero;
+
+                    // makes sure the text is over ball sprite
+                    MeshRenderer textMeshRenderer = textMeshPro.GetComponent<MeshRenderer>();
+                    textMeshRenderer.sortingLayerName = "WordIconsLayer";
+                    textMeshRenderer.sortingOrder = 10;
 
                     // If the ball is a fireball, disable collision.
                     if (!fireBall)
