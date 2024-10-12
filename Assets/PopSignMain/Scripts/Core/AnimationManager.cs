@@ -68,7 +68,31 @@ public class AnimationManager : MonoBehaviour
 			      LogPlayTime ();
             SceneManager.LoadScene( "map" );
         }
-        else if ( gameObject.name == "MenuInGamePause" || gameObject.name == "MenuReview" || gameObject.name == "MenuHowToPlay")
+        else if ( gameObject.name == "MenuInGamePause" || gameObject.name == "MenuReview" || gameObject.name == "MenuHowToPlay" || gameObject.name == "MenuGameControl")
+        {
+          GamePlay.Instance.GameStatus = GameState.Playing;
+        }
+        if( SceneManager.GetActiveScene().name == "game" )
+        {
+            if( GamePlay.Instance.GameStatus == GameState.Pause )
+            {
+                GamePlay.Instance.GameStatus = GameState.WaitAfterClose;
+            }
+        }
+        SoundBase.Instance.GetComponent<AudioSource>().PlayOneShot( SoundBase.Instance.swish[1] );
+        gameObject.SetActive( false );
+        GamePlay.Instance.InGamePauseTriggered = false;
+    }
+
+    public void CloseGameControl()
+    {
+        SoundBase.Instance.GetComponent<AudioSource>().PlayOneShot( SoundBase.Instance.click );
+        if( gameObject.name == "MenuComplete" || gameObject.name == "MenuGameOver" )
+        {
+			      LogPlayTime ();
+            SceneManager.LoadScene( "map" );
+        }
+        else if ( gameObject.name == "MenuInGamePause" || gameObject.name == "MenuReview" || gameObject.name == "MenuHowToPlay" || gameObject.name == "MenuGameControl")
         {
           GamePlay.Instance.GameStatus = GameState.Playing;
         }
@@ -141,9 +165,9 @@ public class AnimationManager : MonoBehaviour
                 PlayerPrefs.Save();
             }
         }
-        else if( gameObject.name == "PracticeScreen" || gameObject.name == "MenuInGamePause" || gameObject.name == "Settings" )
+        else if( gameObject.name == "PracticeScreen" || gameObject.name == "MenuInGamePause" || gameObject.name == "Settings" || gameObject.name == "MenuGameControl")
         {
-            if (gameObject.name == "MenuInGamePause" && CustomizeLevelManager.Instance.tryingToCustomize)
+            if ((gameObject.name == "MenuInGamePause" || gameObject.name == "MenuGameControl") && CustomizeLevelManager.Instance.tryingToCustomize)
             {
                 CustomizeLevelManager.reset();
                 SceneManager.LoadScene("wordlist");
