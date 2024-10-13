@@ -1,13 +1,14 @@
 using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.EventSystems;
-    using TMPro;
-    
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using TMPro;
+
     public class HoldToSign: MonoBehaviour,IPointerDownHandler,IPointerUpHandler
     {
         public bool isPressed;
         public bool isShot = true;
+
         [SerializeField] private TMP_Text label;
         [SerializeField] private GameObject hands;
     
@@ -18,6 +19,7 @@ using System.Collections;
                 TfLiteManager.Instance.StartRecording();
 
         }
+
         public void OnPointerUp(PointerEventData data)
         {
             isPressed = false;
