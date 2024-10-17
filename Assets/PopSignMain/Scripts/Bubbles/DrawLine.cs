@@ -20,6 +20,7 @@ public class DrawLine : MonoBehaviour
     private bool startAnim;
     public bool startRecording = false;
     public bool arrowDown = false;
+    public bool isMouseInputEnabled;
     
 
     // Use this for initialization
@@ -114,13 +115,28 @@ public class DrawLine : MonoBehaviour
         }
     }
 
+    public void ToggleMouseInput(bool isEnabled)
+    {
+        isMouseInputEnabled = isEnabled;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButton(0) && (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > -4.1f || arrowDown))
+        if (isMouseInputEnabled && Input.GetMouseButton(0) && Camera.main.ScreenToWorldPoint(Input.mousePosition).y > -4.1f)
         {
+            DrawLineFunction();
+        }
 
-            if(!arrowDown)
+        if (arrowDown)
+        {
+            DrawLineFunction();
+        }
+    }
+
+    void DrawLineFunction()
+    {
+        if(!arrowDown)
                 dir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Vector3.back * 10;
 
             UnityEngine.Debug.Log(dir);
@@ -156,9 +172,6 @@ public class DrawLine : MonoBehaviour
                     addAngle = 0;
                     if( item.collider.gameObject.layer == LayerMask.NameToLayer( "Border" ) && item.collider.gameObject.name != "GameOverBorder" && item.collider.gameObject.name != "borderForRoundedLevels" )
                     {
-                    //    Debug.DrawLine( waypoints[0], waypoints[1], Color.red );  //waypoints[0] + ( (Vector2)dir - waypoints[0] ).normalized * 10
-                    //    Debug.DrawLine( waypoints[0], dir, Color.blue );
-                    //    Debug.DrawRay( waypoints[0], waypoints[1] - waypoints[0], Color.green );
                         waypoints[1] = point;
                         waypoints[2] = point;
                         line.SetPosition( 1, dir );
@@ -174,9 +187,6 @@ public class DrawLine : MonoBehaviour
                     }
                     else if (item.collider.gameObject.layer == LayerMask.NameToLayer("Ball"))
                     {
-                        // Debug.DrawLine( waypoints[0], waypoints[1], Color.red );  //waypoints[0] + ( (Vector2)dir - waypoints[0] ).normalized * 10
-                        // Debug.DrawLine( waypoints[0], dir, Color.blue );
-                        // Debug.DrawRay( waypoints[0], waypoints[1] - waypoints[0], Color.green );
                         line.SetPosition( 1, point );
                         waypoints[1] = point;
                         waypoints[2] = point;
@@ -196,10 +206,5 @@ public class DrawLine : MonoBehaviour
                     GeneratePositionsPoints();
 
             }
-        }
-        else
-        {
-            startRecording = false;
-        }
     }
 }

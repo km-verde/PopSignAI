@@ -2127,7 +2127,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
-        m_CallState: 2
+        m_CallState: 1
   onToggleOff:
     m_PersistentCalls:
       m_Calls:
@@ -2154,7 +2154,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
   playerPrefsKey: ArrowToggleSwitchState
 --- !u!114 &200818562
 MonoBehaviour:
@@ -3807,6 +3807,7 @@ MonoBehaviour:
   topBorder: {fileID: 1502360742}
   startRecording: 0
   arrowDown: 0
+  isMouseInputEnabled: 0
 --- !u!120 &481892240
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -9554,10 +9555,34 @@ MonoBehaviour:
     m_RotationOrder: 4
   onToggleOn:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 481892239}
+        m_TargetAssemblyTypeName: DrawLine, Assembly-CSharp
+        m_MethodName: ToggleMouseInput
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   onToggleOff:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 481892239}
+        m_TargetAssemblyTypeName: DrawLine, Assembly-CSharp
+        m_MethodName: ToggleMouseInput
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   playerPrefsKey: TouchToggleSwitchState
 --- !u!1 &1304868466
 GameObject:
