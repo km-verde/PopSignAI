@@ -136,7 +136,7 @@ public class DrawLine : MonoBehaviour
                 dir.z = 0;
                 if (lastMousePos == dir)
                 {
-                                //POPSign set startAnim to false. statAnim set to true will animate the line
+                    //POPSign set startAnim to false. statAnim set to true will animate the line
                     startAnim = false;
                 }
                 else startAnim = false;
