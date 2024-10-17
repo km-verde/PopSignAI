@@ -7679,6 +7679,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   line: {fileID: 481892238}
   scaler: 0.1
+  slider: {fileID: 200818562}
 --- !u!114 &1013991644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11680,6 +11681,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   line: {fileID: 481892238}
   scaler: 0.1
+  slider: {fileID: 200818562}
 --- !u!1 &1510404973
 GameObject:
   m_ObjectHideFlags: 0
