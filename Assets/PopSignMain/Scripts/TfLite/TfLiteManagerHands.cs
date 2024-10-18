@@ -34,14 +34,9 @@ public class TfLiteManagerHands : MonoBehaviour, ITfLiteManager
 
 	[HideInInspector]
 	public bool isResponseReady = false;
-	[SerializeField]
-	private float threshold = 0.9f;
-	[SerializeField]
-	private Animator gradientAnimation;
-	[SerializeField]
-	private GameObject tryAgain;
 
 	private int inputSize;
+
 	// Start is called before the first frame update
 	void Awake()
     {
@@ -161,8 +156,6 @@ public class TfLiteManagerHands : MonoBehaviour, ITfLiteManager
 		var level = (int)PlayerPrefs.GetInt("OpenLevel");
 		for (int i = 0; i < 5; i++)
 		{
-			Debug.Log("Max Probability: " + outputs[0, i]);
-			Debug.Log("Word: " + TfLiteManager.LABELS[level-1, i]);
 			if (outputs[0, i] > max)
 			{
 				max = outputs[0, i];
@@ -177,17 +170,10 @@ public class TfLiteManagerHands : MonoBehaviour, ITfLiteManager
 		answer = OverrideOutputInEditor(answer, level);
 #endif
 
-		// Debug.Log("Max Probability " + max);
-		// Debug.Log("results!!!!!!!!!!!!!!!!!! " + answer);
-		if(max >= threshold)
-			return answer;
-		else
-		{
-			Handheld.Vibrate();
-			//gradientAnimation.SetTrigger("FadeTrigger");
-			StartCoroutine(PopInAndOut(tryAgain));
-			return "";
-		}
+		Debug.Log("Max Probability " + max);
+		Debug.Log("results!!!!!!!!!!!!!!!!!! " + answer);
+
+		return answer;
 	}
 
 	private void Update()
@@ -242,11 +228,5 @@ public class TfLiteManagerHands : MonoBehaviour, ITfLiteManager
 		}
 
 		return answer;
-	}
-	private IEnumerator PopInAndOut(GameObject victim)
-	{
-		victim.SetActive(true);
-		yield return new WaitForSeconds(0.8f);
-		victim.SetActive(false);
 	}
 }
