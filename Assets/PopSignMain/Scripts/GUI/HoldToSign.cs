@@ -10,6 +10,17 @@ using System.Collections;
         public bool isPressed;
         public bool isShot = true;
         [SerializeField] private GameObject hands;
+
+        [SerializeField] private Sprite signSprite;
+        [SerializeField] private Sprite shootSprite;
+
+        private Image imageComponent;
+
+        void Start()
+        {
+            // image of game object
+            imageComponent = GetComponent<Image>();
+        }
     
         public void OnPointerDown(PointerEventData data)
         {
@@ -34,15 +45,18 @@ using System.Collections;
             if((hands.GetComponent<HandsMediaPipe>().handInFrame || !isShot)
                 && hands.GetComponent<HandsMediaPipe>().lockOutTimeLeft <= 0)
             {
-                //label.SetText("Shoot");
-                GetComponent<Image>().color = new Color32(170,255,182,255);
-                //170, 255, 182
+                imageComponent.sprite = shootSprite;
+                // //label.SetText("Shoot");
+                // GetComponent<Image>().color = new Color32(170,255,182,255);
+                // //170, 255, 182
             }
             else
             {
-                //label.SetText("Hold\nTo\nSign");
-                GetComponent<Image>().color = new Color32(97, 97, 97,255);
-                //97, 97, 97
+                imageComponent.sprite = signSprite;
+
+                // //label.SetText("Hold\nTo\nSign");
+                // GetComponent<Image>().color = new Color32(97, 97, 97,255);
+                // //97, 97, 97
             }
         }
     }
