@@ -12,7 +12,7 @@ public class ToggleSwitch : MonoBehaviour, IPointerClickHandler
     public bool CurrentValue { get; private set; }
 
     private bool _previousValue;
-    private Slider _slider;
+    protected Slider _slider;
 
     [SerializeField, Range(0, 1f)] private float animationDuration = 0.25f;
     [SerializeField] private AnimationCurve slideEase =
@@ -30,13 +30,10 @@ public class ToggleSwitch : MonoBehaviour, IPointerClickHandler
 
     protected virtual void OnValidate()
     {
+        // sets up toggle
         SetupToggleComponents();
-
-        if (string.IsNullOrEmpty(playerPrefsKey))
-        {
-            playerPrefsKey = $"{gameObject.name}_ToggleSwitchState";
-        }
-        _slider.value = sliderValue;
+        // loads previously set settings
+        LoadState();
     }
 
     private void SetupToggleComponents()
@@ -62,8 +59,10 @@ public class ToggleSwitch : MonoBehaviour, IPointerClickHandler
         sliderColors.disabledColor = Color.white;
         _slider.colors = sliderColors;
         _slider.transition = Selectable.Transition.None;
+        LoadState();
     }
 
+    // for ensuring at least one toggle remains on if in a toggle group
     public void SetupForManager(ToggleSwitchGroupManager manager)
     {
         _toggleSwitchGroupManager = manager;
@@ -71,11 +70,12 @@ public class ToggleSwitch : MonoBehaviour, IPointerClickHandler
 
     protected virtual void Awake()
     {
-        SetupSliderComponent();
+        // sets up toggle switch state name
         if (string.IsNullOrEmpty(playerPrefsKey))
         {
             playerPrefsKey = $"{gameObject.name}_ToggleSwitchState";
         }
+        // loads previously set preferences
         LoadState();
     }
 
@@ -99,18 +99,7 @@ public class ToggleSwitch : MonoBehaviour, IPointerClickHandler
 
     private void SetStateAndStartAnimation(bool state)
     {
-        _previousValue = CurrentValue;
-        CurrentValue = state;
-
-        if (_previousValue != CurrentValue)
-        {
-            if (CurrentValue)
-                onToggleOn?.Invoke();
-            else
-                onToggleOff?.Invoke();
-        }
-
-        SaveState(); 
+        SetState(state);
 
         if (_animateSliderCoroutine != null)
             StopCoroutine(_animateSliderCoroutine);
@@ -142,6 +131,24 @@ public class ToggleSwitch : MonoBehaviour, IPointerClickHandler
         _slider.value = endValue;
     }
 
+    // ensures that state is based on player prefs
+    private void SetState(bool state)
+    {
+        _previousValue = CurrentValue;
+        CurrentValue = state;
+
+        if (_previousValue != CurrentValue)
+        {
+            if (CurrentValue)
+                onToggleOn?.Invoke();
+            else
+                onToggleOff?.Invoke();
+        }
+
+        SaveState();
+    }
+
+    // saves player preferences
     private void SaveState()
     {
         if (!string.IsNullOrEmpty(playerPrefsKey))
@@ -151,13 +158,21 @@ public class ToggleSwitch : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    // loads player preferences
     private void LoadState()
     {
         if (!string.IsNullOrEmpty(playerPrefsKey) && PlayerPrefs.HasKey(playerPrefsKey))
         {
             int savedValue = PlayerPrefs.GetInt(playerPrefsKey);
             bool isOn = savedValue == 1;
-            SetStateAndStartAnimation(isOn);
+
+            SetState(isOn);
+            _slider.value = isOn ? 1 : 0;
+        } else {
+            // initializes toggle component so that it toggles are automatically enabled when
+            // game first opened
+            SetState(true);
+            _slider.value = 1;
         }
     }
 }

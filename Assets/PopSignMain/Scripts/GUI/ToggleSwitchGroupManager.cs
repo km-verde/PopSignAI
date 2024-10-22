@@ -6,9 +6,6 @@ public class ToggleSwitchGroupManager : MonoBehaviour
 {
     [SerializeField] private ToggleSwitch initialToggleSwitch;
 
-
-    [SerializeField] private bool allCanBeToggledOff;
-        
     private List<ToggleSwitch> _toggleSwitches = new List<ToggleSwitch>();
 
     private void Awake()
@@ -42,7 +39,7 @@ public class ToggleSwitchGroupManager : MonoBehaviour
             break;
         }
 
-        if (!areAllToggledOff || allCanBeToggledOff) 
+        if (!areAllToggledOff)
             return;
             
         if (initialToggleSwitch != null)
@@ -56,29 +53,25 @@ public class ToggleSwitchGroupManager : MonoBehaviour
         if (_toggleSwitches.Count <= 1)
             return;
 
-        if (allCanBeToggledOff && toggleSwitch.CurrentValue)
+        // check that at least one toggle is on
+        bool isAnyOtherToggleOn = false;
+        foreach (var button in _toggleSwitches)
         {
-            foreach (var button in _toggleSwitches)
+            if (button != null && button != toggleSwitch && button.CurrentValue)
             {
-                if (button == null)
-                    continue;
-
-                button.ToggleByGroupManager(false);
+                isAnyOtherToggleOn = true;
+                break;
             }
         }
-        else
-        {
-            foreach (var button in _toggleSwitches)
-            {
-                if (button == null)
-                    continue;
 
-                if (button == toggleSwitch)
-                    button.ToggleByGroupManager(true);
-                else
-                    button.ToggleByGroupManager(false);
-            }
+        // if other toggles are not on, prevent from turning off
+        if (!isAnyOtherToggleOn && toggleSwitch.CurrentValue)
+        {
+            return; // Prevent turning off if it's the last one on
         }
+
+        // allow toggles to be manipulated as long as at least one other toggle remains true
+        toggleSwitch.ToggleByGroupManager(!toggleSwitch.CurrentValue);
     }
 }
 
