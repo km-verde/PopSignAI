@@ -139,13 +139,13 @@ public class DrawLine : MonoBehaviour
         if(!arrowDown)
                 dir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Vector3.back * 10;
 
-            UnityEngine.Debug.Log(dir);
-            if(!startRecording && Camera.main.ScreenToWorldPoint(Input.mousePosition).y > -4.1f)
-            {
-                TfLiteManager.Instance.StartRecording();
-                UnityEngine.Debug.Log("Recording from line");
-                startRecording = true;
-            }
+            // UnityEngine.Debug.Log(dir);
+            // if(!startRecording && Camera.main.ScreenToWorldPoint(Input.mousePosition).y > -4.1f)
+            // {
+            //     TfLiteManager.Instance.StartRecording();
+            //     UnityEngine.Debug.Log("Recording from line");
+            //     startRecording = true;
+            // }
 
             if( !mainscript.StopControl )
             {
