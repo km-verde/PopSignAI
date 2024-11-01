@@ -123,7 +123,7 @@ public class DrawLine : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isMouseInputEnabled && Input.GetMouseButton(0) && Camera.main.ScreenToWorldPoint(Input.mousePosition).y > -4.1f)
+        if (Input.GetMouseButton(0) && Camera.main.ScreenToWorldPoint(Input.mousePosition).y > -4.1f)
         {
             DrawLineFunction();
         }

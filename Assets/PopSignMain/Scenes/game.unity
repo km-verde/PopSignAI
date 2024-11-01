@@ -2131,6 +2131,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 1
+      - m_Target: {fileID: 594455319}
+        m_TargetAssemblyTypeName: HoldToSign, Assembly-CSharp
+        m_MethodName: ToggleShotInput
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 594455314}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   onToggleOff:
     m_PersistentCalls:
       m_Calls:
@@ -2158,6 +2182,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 1
+      - m_Target: {fileID: 594455319}
+        m_TargetAssemblyTypeName: HoldToSign, Assembly-CSharp
+        m_MethodName: ToggleShotInput
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 594455314}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   playerPrefsKey: ArrowToggleSwitchState
 --- !u!114 &200818562
 MonoBehaviour:
@@ -5230,7 +5278,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: afb8b146f9285af4783bc467fb8f2100, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2d54ffe0cafb74c22a369fffb6ddc506, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5265,6 +5313,7 @@ MonoBehaviour:
   hands: {fileID: 1270330333}
   signSprite: {fileID: 21300000, guid: 2d54ffe0cafb74c22a369fffb6ddc506, type: 3}
   shootSprite: {fileID: 21300000, guid: b71718a1b3d2b4938bb9d88dbd2158ad, type: 3}
+  slider: {fileID: 0}
 --- !u!1 &604804453
 GameObject:
   m_ObjectHideFlags: 0
@@ -9687,7 +9736,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
   playerPrefsKey: TouchToggleSwitchState
 --- !u!1 &1304868466
@@ -12769,7 +12818,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd9e598709eb94bf4a6a7999b3661f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialToggleSwitch: {fileID: 0}
 --- !u!1 &1714807931
 GameObject:
   m_ObjectHideFlags: 0

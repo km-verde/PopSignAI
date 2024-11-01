@@ -86,9 +86,9 @@ public class ToggleSwitch : MonoBehaviour, IPointerClickHandler
 
     private void Toggle()
     {
-        if (_toggleSwitchGroupManager != null)
-            _toggleSwitchGroupManager.ToggleGroup(this);
-        else
+        // if (_toggleSwitchGroupManager != null)
+        //     _toggleSwitchGroupManager.ToggleGroup(this);
+        // else
             SetStateAndStartAnimation(!CurrentValue);
     }
 

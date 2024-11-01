@@ -16,10 +16,24 @@ using System.Collections;
 
         private Image imageComponent;
 
+        [SerializeField] private Slider slider;
+
+        // void Awake() {
+        //     if (slider != null)
+        //     {
+        //         gameObject.SetActive(slider.value > 0);
+        //         slider.onValueChanged.AddListener(OnSliderValueChanged);
+        //     }
+        // }
+
         void Start()
         {
-            // image of game object
-            imageComponent = GetComponent<Image>();
+            // if (slider != null)
+            // {
+            //     OnSliderValueChanged(slider.value);
+                // image of game object
+                imageComponent = GetComponent<Image>();
+            // }
         }
     
         public void OnPointerDown(PointerEventData data)
@@ -58,5 +72,15 @@ using System.Collections;
                 // GetComponent<Image>().color = new Color32(97, 97, 97,255);
                 // //97, 97, 97
             }
+        }
+
+        public void ToggleShotInput(bool isEnabled)
+        {
+            isShot = isEnabled;
+        }
+
+        private void OnSliderValueChanged(float value)
+        {
+            gameObject.SetActive(value > 0);
         }
     }

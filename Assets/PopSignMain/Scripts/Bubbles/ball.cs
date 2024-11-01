@@ -143,8 +143,13 @@ public class ball : MonoBehaviour
                 //If the y position of the click is within 4 units of the bottom of the original lowest row of balls and you have control over the ball
                 if (!mainscript.StopControl)
                 {
-                    if(GameObject.Find("Sign/Shoot").GetComponent<HoldToSign>().isShot)
-                        StopRecordingAndShoot();
+                    if(GameObject.Find("Sign/Shoot").GetComponent<HoldToSign>().isShot && GameObject.Find("Line").GetComponent<DrawLine>().isMouseInputEnabled) {
+                        StopRecordingAndShootV2();
+                    } else if (GameObject.Find("Line").GetComponent<DrawLine>().isMouseInputEnabled) {
+                        StopRecordingAndShootV2();
+                    } else {
+                        StopRecordingAndShootV2();
+                    }
                 }
             }
         }
@@ -203,7 +208,7 @@ public class ball : MonoBehaviour
     //        return false;
     //}
 
-    public void StopRecordingAndShoot()
+    public void StopRecordingAndShootV2()
     {
         GameObject ball = gameObject;
         //Get local response result
@@ -251,12 +256,68 @@ public class ball : MonoBehaviour
         launched = true;
         SoundBase.Instance.GetComponent<AudioSource>().PlayOneShot(SoundBase.Instance.swish[0]);
 
-        // Disappear the tutorial instructions
+        // // Disappear the tutorial instructions
         Camera.main.GetComponent<TutorialManager>().BallHit();                
         GameObject.Find("MediaPipeHands").GetComponent<HandsMediaPipe>().lockOutTimeLeft = GameObject.Find("MediaPipeHands").GetComponent<HandsMediaPipe>().lockOutTime;
 
         TfLiteManager.Instance.StartRecording();
         TfLiteManager.Instance.StopRecording();                
+    }
+
+    public void StopRecordingAndShootV1()
+    {
+        GameObject ball = gameObject;
+        //Get local response result
+        string result = TfLiteManager.Instance.StopRecording();
+
+        signColor.color = new Color32(100, 255, 117, 255);
+        signCaptured.SetTrigger("Pulse");
+
+
+        //We Rewrite the color
+        var newColor = this.sharedVideoManager.getBallColorFromVideoName(result);
+        ball.GetComponent<ColorBallScript>().SetColor(newColor);
+
+        //Once ball is launched, set color of ball to the color of its word.
+        int orginalColor = (int)ball.GetComponent<ColorBallScript>().mainColor;
+        GetComponent<SpriteRenderer>().sprite = gameObject.GetComponent<ColorBallScript>().sprites[orginalColor - 1];
+
+        //160-170 puts image of word on the launched ball
+        GameObject imageObject = new GameObject();
+        imageObject.transform.parent = ball.transform;
+
+        SpriteRenderer ballImage = imageObject.AddComponent<SpriteRenderer>();
+        // Consider the image size
+        ballImage.transform.localScale = new Vector3(0.2f, 0.2f, 0.0f);
+        ballImage.transform.localPosition = new Vector3(0f, 0f, 5.0f);
+        string imageName = this.sharedVideoManager.getVideoByColor(ball.GetComponent<ColorBallScript>().mainColor).imageName;
+        ballImage.sprite = (Sprite)Resources.Load(imageName, typeof(Sprite));
+        ballImage.sortingLayerName = "WordIconsLayer";
+        ballImage.sortingOrder = 2;
+
+        // If the ball is a fireball, disable collision.
+        if (!fireBall)
+        {
+            GetComponent<CircleCollider2D>().enabled = false;
+        }
+
+        // Launch the ball! Make the ball movement sound
+        target = worldPos;
+        setTarget = true;
+        startTime = Time.time;
+        dropTarget = transform.position;
+        mainscript.Instance.newBall = gameObject;
+        mainscript.Instance.newBall2 = gameObject;
+        GetComponent<Rigidbody2D>().AddForce(target - dropTarget, ForceMode2D.Force);
+        launched = true;
+        SoundBase.Instance.GetComponent<AudioSource>().PlayOneShot(SoundBase.Instance.swish[0]);
+
+        // // Disappear the tutorial instructions
+        Camera.main.GetComponent<TutorialManager>().BallHit();                
+        // GameObject.Find("MediaPipeHands").GetComponent<HandsMediaPipe>().lockOutTimeLeft = GameObject.Find("MediaPipeHands").GetComponent<HandsMediaPipe>().lockOutTime;
+
+        // TfLiteManager.Instance.StartRecording();
+        // // TfLiteManager.Instance.StopRecording();                
     }
 
     void FixedUpdate()
