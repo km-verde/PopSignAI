@@ -21,7 +21,6 @@ public class DrawLine : MonoBehaviour
     public bool startRecording = false;
     public bool arrowDown = false;
     public bool isMouseInputEnabled;
-    
 
     // Use this for initialization
     void Start()
@@ -120,7 +119,6 @@ public class DrawLine : MonoBehaviour
         isMouseInputEnabled = isEnabled;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButton(0) && Camera.main.ScreenToWorldPoint(Input.mousePosition).y > -4.1f)

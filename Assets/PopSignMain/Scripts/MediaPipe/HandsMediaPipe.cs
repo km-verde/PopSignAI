@@ -162,6 +162,7 @@ public class HandsMediaPipe : MonoBehaviour
 
         while (true)
         {
+            lockOutTimeLeft -= Time.deltaTime;
             _inputTexture.SetPixels32(_webCamTexture.GetPixels32(_inputPixelData));
             var imageFrame = new ImageFrame(ImageFormat.Types.Format.Srgba, _width, _height, _width * 4, _inputTexture.GetRawTextureData<byte>());
             var currentTimestamp = stopwatch.ElapsedTicks / (System.TimeSpan.TicksPerMillisecond / 1000);
@@ -173,24 +174,53 @@ public class HandsMediaPipe : MonoBehaviour
 
             if (handLandmarksStream.TryGetNext(out var handLandmarks))
             {
-                if(!Input.GetMouseButton(0))
-                {
-                    if(shootButton.GetComponent<HoldToSign>().isShot && lockOutTimeLeft <= 0f)
+                // if (!Input.GetMouseButton(0))
+                // {
+                        // if (shootButton.GetComponent<HoldToSign>().isShot && lockOutTimeLeft <= 0f)
+                        // {
+                        //     TfLiteManager.Instance.StartRecording();
+                        //     Debug.Log("Recording Started");
+                        // }
+
+                        // // If the button is pressed but the lockOutTimeLeft is still greater than 0
+                        // if (shootButton.GetComponent<HoldToSign>().isShot)
+                        // {
+                        //     if (lockOutTimeLeft <= 0f)
+                        //     {
+                        //         handInFrame = true;
+                        //         shootButton.GetComponent<HoldToSign>().isShot = false;
+                        //     }
+                        // }
+                    // If the shoot button is active
+                    if (shootButton != null && shootButton.activeSelf)
                     {
-                        TfLiteManager.Instance.StartRecording();
-                        Debug.Log("Recording Started");
-                    }
-                    if(shootButton.GetComponent<HoldToSign>().isShot)
-                    {
-                        if(lockOutTimeLeft <= 0f)
+                        // If the button is pressed and the lockOutTimeLeft is zero or less
+                        if (shootButton.GetComponent<HoldToSign>().isShot && lockOutTimeLeft <= 0f)
                         {
-                            handInFrame = true;
-                            shootButton.GetComponent<HoldToSign>().isShot = false;
+                            TfLiteManager.Instance.StartRecording();
+                            Debug.Log("Recording Started");
                         }
 
+                        // If the button is pressed but the lockOutTimeLeft is still greater than 0
+                        if (shootButton.GetComponent<HoldToSign>().isShot)
+                        {
+                            if (lockOutTimeLeft <= 0f)
+                            {
+                                handInFrame = true;
+                                shootButton.GetComponent<HoldToSign>().isShot = false;
+                            }
+                        }
                     }
-                   
-                }
+                    else // If the shoot button is not active
+                    {
+                        if (lockOutTimeLeft <= 0f)
+                        {
+                            TfLiteManager.Instance.StartRecording();
+                            Debug.Log("Recording Started without shoot button.");
+                        }
+                    }
+                // }
+
                 if (TfLiteManager.Instance.IsRecording() && !GamePlay.Instance.InGamePauseTriggered)
                 {
                     if (handLandmarks != null && handLandmarks.Count > 0)

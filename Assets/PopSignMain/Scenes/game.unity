@@ -9518,7 +9518,7 @@ MonoBehaviour:
   sessionNumber: 0
   recordingFrameNumber: 0
   isResponseReady: 0
-  threshold: 0.99
+  threshold: 0.9
   gradientAnimation: {fileID: 988056040}
   tryAgain: {fileID: 2109206472}
 --- !u!1 &1284974436
