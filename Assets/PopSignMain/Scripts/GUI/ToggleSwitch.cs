@@ -23,7 +23,6 @@ public class ToggleSwitch : MonoBehaviour, IPointerClickHandler
     [SerializeField] private UnityEvent onToggleOn;
     [SerializeField] private UnityEvent onToggleOff;
 
-    private ToggleSwitchGroupManager _toggleSwitchGroupManager;
     protected Action transitionEffect;
 
     [SerializeField] private string playerPrefsKey = "";
@@ -62,12 +61,6 @@ public class ToggleSwitch : MonoBehaviour, IPointerClickHandler
         LoadState();
     }
 
-    // for ensuring at least one toggle remains on if in a toggle group
-    public void SetupForManager(ToggleSwitchGroupManager manager)
-    {
-        _toggleSwitchGroupManager = manager;
-    }
-
     protected virtual void Awake()
     {
         // sets up toggle switch state name
@@ -86,15 +79,7 @@ public class ToggleSwitch : MonoBehaviour, IPointerClickHandler
 
     private void Toggle()
     {
-        // if (_toggleSwitchGroupManager != null)
-        //     _toggleSwitchGroupManager.ToggleGroup(this);
-        // else
-            SetStateAndStartAnimation(!CurrentValue);
-    }
-
-    public void ToggleByGroupManager(bool valueToSetTo)
-    {
-        SetStateAndStartAnimation(valueToSetTo);
+        SetStateAndStartAnimation(!CurrentValue);
     }
 
     private void SetStateAndStartAnimation(bool state)
@@ -159,7 +144,7 @@ public class ToggleSwitch : MonoBehaviour, IPointerClickHandler
     }
 
     // loads player preferences
-    private void LoadState()
+    public void LoadState()
     {
         if (!string.IsNullOrEmpty(playerPrefsKey) && PlayerPrefs.HasKey(playerPrefsKey))
         {

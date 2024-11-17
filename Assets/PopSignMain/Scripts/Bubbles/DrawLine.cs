@@ -20,7 +20,6 @@ public class DrawLine : MonoBehaviour
     private bool startAnim;
     public bool startRecording = false;
     public bool arrowDown = false;
-    public bool isMouseInputEnabled;
 
     // Use this for initialization
     void Start()
@@ -30,8 +29,9 @@ public class DrawLine : MonoBehaviour
         GeneratePositionsPoints();
         HidePoints();
         waypoints[0] = transform.position;
-        waypoints[1] = transform.position+Vector3.up*5;
+        waypoints[1] = transform.position + Vector3.up * 5;
     }
+
 
     //Method meant for hiding game objects currently on screen 
     void HidePoints()
@@ -112,11 +112,6 @@ public class DrawLine : MonoBehaviour
             pointers2[i] = Instantiate(pointer, transform.position, transform.rotation) as GameObject;
             pointers2[i].transform.parent = transform;
         }
-    }
-
-    public void ToggleMouseInput(bool isEnabled)
-    {
-        isMouseInputEnabled = isEnabled;
     }
 
     void Update()

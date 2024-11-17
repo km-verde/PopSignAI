@@ -174,31 +174,14 @@ public class HandsMediaPipe : MonoBehaviour
 
             if (handLandmarksStream.TryGetNext(out var handLandmarks))
             {
-                // if (!Input.GetMouseButton(0))
-                // {
-                        // if (shootButton.GetComponent<HoldToSign>().isShot && lockOutTimeLeft <= 0f)
-                        // {
-                        //     TfLiteManager.Instance.StartRecording();
-                        //     Debug.Log("Recording Started");
-                        // }
-
-                        // // If the button is pressed but the lockOutTimeLeft is still greater than 0
-                        // if (shootButton.GetComponent<HoldToSign>().isShot)
-                        // {
-                        //     if (lockOutTimeLeft <= 0f)
-                        //     {
-                        //         handInFrame = true;
-                        //         shootButton.GetComponent<HoldToSign>().isShot = false;
-                        //     }
-                        // }
-                    // If the shoot button is active
+                    // Shoot button is active
                     if (shootButton != null && shootButton.activeSelf)
                     {
                         // If the button is pressed and the lockOutTimeLeft is zero or less
                         if (shootButton.GetComponent<HoldToSign>().isShot && lockOutTimeLeft <= 0f)
                         {
                             TfLiteManager.Instance.StartRecording();
-                            Debug.Log("Recording Started");
+                            Debug.Log("Recording started");
                         }
 
                         // If the button is pressed but the lockOutTimeLeft is still greater than 0
@@ -211,15 +194,14 @@ public class HandsMediaPipe : MonoBehaviour
                             }
                         }
                     }
-                    else // If the shoot button is not active
+                    else // Shoot button is not active
                     {
                         if (lockOutTimeLeft <= 0f)
                         {
                             TfLiteManager.Instance.StartRecording();
-                            Debug.Log("Recording Started without shoot button.");
+                            Debug.Log("Recording without shoot button.");
                         }
                     }
-                // }
 
                 if (TfLiteManager.Instance.IsRecording() && !GamePlay.Instance.InGamePauseTriggered)
                 {

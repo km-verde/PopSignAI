@@ -4,7 +4,8 @@ using System.Collections;
     using UnityEngine.EventSystems;
     using UnityEngine.UI;
     //using TMPro;
-    
+
+// still not saving properly, look at ToggleSwitch.cs for toggle behavior
 public class HoldToSign : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public bool isPressed;
@@ -16,33 +17,32 @@ public class HoldToSign : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     private Image imageComponent;
 
+    // refers to toggle
     [SerializeField] private Slider slider;
 
     void Awake()
     {
-        // Ensure the Image component is assigned here
         imageComponent = GetComponent<Image>();
 
         if (slider != null)
         {
-            // Ensure slider value is initialized correctly
-            slider.value = Mathf.Clamp(slider.value, 0, 1);
+            bool isVisible = slider.value > 0;
+            gameObject.SetActive(isVisible);
+
+            if (isVisible)
+            {
+                imageComponent.sprite = signSprite; // Initialize with the "signSprite"
+            }
+
             slider.onValueChanged.AddListener(OnSliderValueChanged);
-
-            Debug.Log("Slider Value in Awake: " + slider.value); // Debugging line
         }
-
-        // Manually update visibility based on slider value right here in Awake
-        UpdateButtonVisibility();
     }
 
     void Start()
     {
-        // Ensure the visibility is set correctly at the start of the scene
         if (slider != null)
         {
-            Debug.Log("Slider Value in Start: " + slider.value); // Debugging line
-            UpdateButtonVisibility();
+            OnSliderValueChanged(slider.value);
         }
     }
 
@@ -59,9 +59,6 @@ public class HoldToSign : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     void Update()
     {
-        // Prevent errors if imageComponent is not assigned yet
-        if (imageComponent == null) return;
-
         // Handle shot logic
         if (isShot && !Input.GetMouseButton(0))
         {
@@ -87,20 +84,8 @@ public class HoldToSign : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     private void OnSliderValueChanged(float value)
     {
-        // Log and update button visibility when slider value changes
-        Debug.Log($"Slider value changed to: {value}");
-        UpdateButtonVisibility();
-    }
 
-    private void UpdateButtonVisibility()
-    {
-        // Ensure visibility based on slider value
-        if (slider != null)
-        {
-            bool isVisible = slider.value > 0;
-            Debug.Log($"Slider Value: {slider.value}, Button Visible: {isVisible}");
-            gameObject.SetActive(isVisible);
-        }
+        gameObject.SetActive(value > 0);
     }
 }
 
